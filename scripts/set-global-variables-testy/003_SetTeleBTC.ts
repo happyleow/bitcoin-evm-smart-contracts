@@ -11,9 +11,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     let tx
     
     logger.color('blue').log("-------------------------------------------------")
-    logger.color('blue').bold().log("Set relay globally...")
+    logger.color('blue').bold().log("Set telebtc globally...")
     
-    const relay = await deployments.get("BitcoinRelay")
+    const telebtc = await deployments.get("TeleBTC")
 
     // set relay in cc transfer router
     const ccTransferRouter = await deployments.get("CCTransferRouter")
@@ -22,8 +22,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         ccTransferRouter.address
     )
 
-    tx = await ccTransferRouterInstance.setRelay(
-        relay.address
+    tx = await ccTransferRouterInstance.setTeleBTC(
+        telebtc.address
     )
     tx.wait(1)
     console.log("set relay in CCtransfer router: ", tx.hash)
@@ -36,38 +36,74 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         ccBurnRouter.address
     )
 
-    tx = await ccBurnRouterInstance.setRelay(
-        relay.address
+    tx = await ccBurnRouterInstance.setTeleBTC(
+        telebtc.address
     )
     tx.wait(1)
-    console.log("set relay in CCburn router: ", tx.hash)
+    console.log("set telebtc in CCburn router: ", tx.hash)
 
-    // set relay in cc exchange router
+    // set telebtc in cc exchange router
     const ccExchangeRouter = await deployments.get("CCExchangeRouter")
     const ccExchangeRouterFactory = await ethers.getContractFactory("CCExchangeRouter")
     const ccExchangeRouterInstance = await ccExchangeRouterFactory.attach(
     ccExchangeRouter.address
     )
 
-    tx = await ccExchangeRouterInstance.setRelay(
-        relay.address
+    tx = await ccExchangeRouterInstance.setTeleBTC(
+        telebtc.address
     )
     tx.wait(1)
-    console.log("set relay in CCexchange router: ", tx.hash)
+    console.log("set telebtc in CCexchange router: ", tx.hash)
 
-    // set relay in instant router
+    // set telebtc in instant router
     const instantRouter = await deployments.get("InstantRouter")
     const instantRouterFactory = await ethers.getContractFactory("InstantRouter")
     const instantRouterInstance = await instantRouterFactory.attach(
         instantRouter.address
     )
 
-    tx = await instantRouterInstance.setRelay(
-        relay.address
+    tx = await instantRouterInstance.setTeleBTC(
+        telebtc.address
     )
     tx.wait(1)
-    console.log("set relay in instant router: ", tx.hash)
+    console.log("set telebtc in instant router: ", tx.hash)
 
+    // set telebtc in instant pool
+    const instantPool = await deployments.get("InstantPool")
+    const instantPoolFactory = await ethers.getContractFactory("InstantPool")
+    const instantPoolInstance = await instantPoolFactory.attach(
+        instantPool.address
+    )
+
+    tx = await instantPoolInstance.setTeleBTC(
+        telebtc.address
+    )
+    tx.wait(1)
+    console.log("set telebtc in instant pool: ", tx.hash)
+
+    // set telebtc in locker
+    // const lockers = await deployments.get("LockersProxy")
+    // const lockersLib = await deployments.get("LockersLib")
+    // const lockersFactory = await ethers.getContractFactory(
+    //     "LockersLogicTestnet",
+    //     {
+    //         libraries: {
+    //             LockersLib: lockersLib.address
+    //         }
+    //     }
+    // );
+    // const lockersInstance = await lockersFactory.attach(
+    //     lockers.address
+    // )
+
+    // tx = await lockersInstance.setTeleBTC(
+    //     telebtc.address
+    // )
+    // tx.wait(1)
+    // console.log("set telebtc in lockers: ", tx.hash)
+
+
+    logger.color('blue').log("-------------------------------------------------")
 
 };
 

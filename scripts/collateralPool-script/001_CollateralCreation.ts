@@ -17,8 +17,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         collateralPoolFactoryContract.address
     )
 
-    const erc20asLinkContract = await deployments.get("WETH")
-    const erc20asLinkFactory = await ethers.getContractFactory("WETH")
+    const erc20asLinkContract = await deployments.get("ERC20AsLink")
+    const erc20asLinkFactory = await ethers.getContractFactory("ERC20AsLink")
     const erc20asLinkInstance = await erc20asLinkFactory.attach(
         erc20asLinkContract.address
     )
