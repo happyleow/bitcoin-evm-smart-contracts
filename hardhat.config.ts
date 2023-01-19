@@ -132,6 +132,7 @@ const config: HardhatUserConfig = {
 		artifacts: "artifacts",
 		deploy: "deploy",
 		deployments: "deployments",
+		sources: "contracts_for_test"
   	},
   	typechain: {
 		outDir: "src/types",
