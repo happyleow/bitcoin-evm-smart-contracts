@@ -17,7 +17,7 @@ describe.only("collateral pool and factory (integration test)", async () => {
     const factoryDeployJSON = JSON.parse(fs.readFileSync(deployFile + network.name + "/CollateralPoolFactory.json", "utf8"))
     const factoryAddress = factoryDeployJSON.address
 
-    const erc20DeployJSON = JSON.parse(fs.readFileSync(deployFile + network.name + "/ERC20AsDot.json", "utf8"))
+    const erc20DeployJSON = JSON.parse(fs.readFileSync(deployFile + network.name + "/ERC20Minter.json", "utf8"))
     const erc20Address = erc20DeployJSON.address
 
 
@@ -33,11 +33,11 @@ describe.only("collateral pool and factory (integration test)", async () => {
 
         // instance of factory
         factory = await ethers.getContractAt("CollateralPoolFactory", factoryAddress, signer)
-        erc20 = await ethers.getContractAt("ERC20", erc20Address, signer)
+        erc20 = await ethers.getContractAt("ERC20Minter", erc20Address, signer)
         collateralPoolAddress = await factory.getCollateralPoolByToken(erc20.address)
         let poolsCount = await factory.allCollateralPoolsLength()
         collateralPoolIndex = Number(poolsCount) - 1
-        
+
         if (collateralPoolAddress != ZERO_ADDRESS) {
             console.log("using existing collateral pool at: ", collateralPoolAddress)
         }
@@ -46,7 +46,7 @@ describe.only("collateral pool and factory (integration test)", async () => {
             let rc = await tx.wait(1)
             collateralPoolAddress = rc.events[3].args[3]
             console.log("deploying new pool at: ", collateralPoolAddress)
-            await expect (await factory.allCollateralPoolsLength()).to.equal(Number(poolsCount))
+            await expect (await factory.allCollateralPoolsLength()).to.equal(Number(poolsCount) + 1)
             collateralPoolIndex += 1
         }
 
@@ -58,10 +58,13 @@ describe.only("collateral pool and factory (integration test)", async () => {
         it("add collateral", async () => {
             let tx;
             let currentCollateralPoolTokenAmount = await collateralPool.balanceOf(signer.address)
-            let currentErc20TokenAmount = await erc20.balanceOf(signer.address)
             let collateralAmount = 10;
-            if (await erc20.balanceOf(signer.address) < collateralAmount)
-                erc20.mint(signer.address, collateralAmount)
+            if (await erc20.balanceOf(signer.address) < collateralAmount) {
+                tx = await erc20.mint(signer.address, collateralAmount)
+                await tx.wait(1)
+            }
+
+            let currentErc20TokenAmount = await erc20.balanceOf(signer.address)
             
             tx = await erc20.approve(collateralPoolAddress, collateralAmount);
             await tx.wait(1)
