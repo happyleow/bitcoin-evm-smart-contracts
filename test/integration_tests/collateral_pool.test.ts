@@ -7,7 +7,7 @@ import { deployFile, privateKey } from "../../helper-hardhat-config"
 import { Wallet } from "@ethersproject/wallet";
 import { BigNumber } from "@ethersproject/bignumber";
 
-describe.only("collateral pool and factory (integration test)", async () => {
+describe("collateral pool and factory (integration test)", async () => {
     // Constants
     let ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
     const oneUnit = BigNumber.from(10).pow(8)

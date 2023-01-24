@@ -20,3 +20,4 @@ export interface networkConfigItem {
   export const developmentChains = ["hardhat", "localhost"]
   export const deployFile = "deployments/"
   export const privateKey = "b773c1f5b19f93a2df58ef2773837fa6d8663d85f39dee40cce03231f201470f"
+  export const lockerTargetAddress = "0xa4983422b420ed9993658797afbaf2c87b45d28a"
